@@ -78,7 +78,7 @@ def fuck(proxyParam):
     headers = {"User-Agent": uaString}
     try:
         r = requests.post(
-            url_to_fuck, data=payload, timeout=3, headers=headers, proxies=proxyParam
+            url_to_fuck, data=payload, timeout=2, headers=headers, proxies=proxyParam
         )
         req_status = str(r.status_code)
         req_time = str(r.elapsed.total_seconds())
@@ -118,9 +118,18 @@ def main(desire_fuck_total):
         else:
             desire_fuck_total += 1
             ip_list_rec[ipSelect][0] += 1
-            if ip_list_rec[ipSelect][0] > 10:
+            if ip_list_rec[ipSelect][0] > 20:
                 del ip_list_rec[ipSelect]
                 del ip_list[ipSelect]
+                if len(ip_list) == 0:
+                    ip_list_rec = []
+                    ip_list = proxyGet(20)
+                    if not ip_list:
+                        ip_list = proxyGet(20)
+                        tips([1, "获取代理ip失败！"])
+                        exit(1)
+                    for i in range(20):
+                        ip_list_rec.append([0, ip_list[i]])
             tips(
                 [1, "请求失败！总次数加一！"],
                 ["ERROR", "本次请求次序是：", "还有", "次"],
